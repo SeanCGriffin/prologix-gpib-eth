@@ -109,13 +109,23 @@ class PrologixGPIBEth:
         self.write("++read eoi\r")
         return self.read()
 
-    def ask_device(self, gpib_address, command):
+    def query_device(self, gpib_address, command):
         '''
-        Issue a command to a device at a given address.
+        Query a device at an address and wait for a response. 
         '''
         self.set_device_address(gpib_address)
         time.sleep(0.1)
         return self.ask(command)
+
+    def command_device(self, gpib_address, command):
+        '''
+        Issue a command to a device at an address.
+        '''     
+        self.set_device_address(gpib_address)
+        self.send(command + "\n")
+        return
+
+
 
 def usage():
     '''
@@ -138,7 +148,7 @@ def main():
     command = sys.argv[3]
 
     controller = PrologixGPIBEth(host_ip, 2.)
-    print(controller.ask_device(device_address, command))
+    print(controller.query_device(device_address, command))
     controller.close()
 
     return 0
